@@ -15,11 +15,11 @@
     </div>
 
     <div class="grid-container">
-      <span *ngFor="let row of grid; let r = index;">
+      <div *ngFor="let row of grid; let r = index;" class="row">
         <span *ngFor="let column of row; let c = index;">
           <button class="grid-item" (click)="play(r, c)">{{column}}</button>
         </span>
-      </span>
+      </div>
     </div>
 
     <div class="game-state-container">
