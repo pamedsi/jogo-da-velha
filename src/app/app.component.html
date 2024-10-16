@@ -14,13 +14,7 @@
     [draws]="draws"
   ></app-scoreboard>
 
-    <div class="grid">
-      <div *ngFor="let row of grid; let r = index;" class="row">
-        <span *ngFor="let column of row; let c = index;">
-          <button class="grid-item" (click)="play(r, c)">{{column}}</button>
-        </span>
-      </div>
-    </div>
+  <app-grid></app-grid>
 
     <div class="game-state-container">
       @if (gameState === GameState.WAITING_START || gameState === GameState.FINISHED) {

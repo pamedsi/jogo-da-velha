@@ -54,30 +54,6 @@ body {
   border-radius: 20px;
 }
 
-.grid {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 294px;
-  height: 294px;
-  margin-top: 35px;
-  background-color: #2B0040;
-}
-
-.grid-item {
-  margin: 0.5rem;
-  background-color: #43115B;
-  color: white;
-  font-size: 3rem;
-  width: 92px;
-  height: 92px;
-  border-radius: 10px;
-}
-
-.grid-item:hover {
-  background-color: #5A1E76;
-}
-
 .game-state-container {
   margin-top: 90px;
 }
@@ -110,8 +86,4 @@ body {
 
 .o {
   background-color: #DCBF3F;
-}
-
-.row {
-  display: flex;
 }

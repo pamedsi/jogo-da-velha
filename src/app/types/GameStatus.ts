@@ -1,4 +1,4 @@
-export type GameWinner = {
-  gameFinished: boolean
+export type GameStatus = {
+  finished: boolean
   winner: string
 }
