@@ -1,5 +1,7 @@
-export const emptyGrid: string[][] = [
-  ["", "", ""],
-  ["", "", ""],
-  ["", "", ""]
-]
+export const getEmptyGrid = (): string[][]  => {
+  return[
+          ["", "", ""],
+          ["", "", ""],
+          ["", "", ""]
+  ]
+}
