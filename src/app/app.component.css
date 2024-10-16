@@ -72,10 +72,13 @@ body {
 
 }
 
+.counter {
+  font-size: 2rem;
+}
+
 .player-x {
   background-color: #72CFF9;
   margin-right: 10px;
-
 }
 
 .draw {

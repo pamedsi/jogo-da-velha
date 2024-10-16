@@ -9,10 +9,21 @@
 
   <section class="container">
     <div class="players-draw-container">
-      <span class="player-x">Player X</span>
-      <span class="draw">Draw</span>
-      <span class="player-o">Player O</span>
-    </div>
+      <div class="player-x">
+        <div>Player X</div>
+        <div class="counter">{{xScore}}</div>
+      </div>
+      <div class="draw">
+        <div>
+          <div>Draw</div>
+          <div class="counter">{{draws}}</div>
+        </div>
+      </div>
+      <div class="player-o">
+          <div>Player O</div>
+          <div class="counter">{{oScore}}</div>
+        </div>
+      </div>
 
     <div class="grid-container">
       <div *ngFor="let row of grid; let r = index;" class="row">

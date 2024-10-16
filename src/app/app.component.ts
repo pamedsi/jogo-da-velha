@@ -13,6 +13,9 @@ import {GameWinner} from "./types/GameWinner";
   styleUrl: './app.component.css'
 })
 export class AppComponent {
+  xScore: number = 0
+  oScore: number = 0
+  draws: number = 0
   moves: number = 0
   gameState: GameState = GameState.WAITING_START
   grid: string[][] = getEmptyGrid()
@@ -48,11 +51,13 @@ export class AppComponent {
       if (winner.gameFinished && winner.winner) {
         setTimeout(()=> {
           alert(`Jogador: "${winner.winner}" venceu!`)
+          winner.winner === "X" ? this.xScore++ : this.oScore++
         }, delay)
       }
       else {
         setTimeout(()=> {
           alert(`Deu velha! Comece outro jogo!`)
+          this.draws++
         }, delay)
       }
     }
