@@ -101,6 +101,8 @@ body {
 
 .grid-item {
   background-color: #43115B;
+  color: white;
+  font-size: 3rem;
   width: 92px;
   height: 92px;
   border-radius: 10px;
