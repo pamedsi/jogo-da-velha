@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {NgForOf} from "@angular/common";
-import {emptyGrid} from "./assets/assets";
+import {getEmptyGrid} from "./assets/assets";
 import {GameState} from './enums/GameState';
 import {GameWinner} from "./types/GameWinner";
 
@@ -15,12 +15,12 @@ import {GameWinner} from "./types/GameWinner";
 export class AppComponent {
   moves: number = 0
   gameState: GameState = GameState.WAITING_START
-  grid: string[][] = emptyGrid
+  grid: string[][] = getEmptyGrid()
   protected readonly GameState = GameState
 
   startNewGame(): void {
     this.gameState = GameState.X_TURN
-    this.grid = emptyGrid
+    this.grid = getEmptyGrid()
     this.moves = 0
   }
 
@@ -40,17 +40,30 @@ export class AppComponent {
         break
     }
     this.grid[row][column] = move;
-    if (this.getGameWinner()) {
+
+    const winner = this.getGameWinner()
+    if (winner.gameFinished) {
+      const delay = 100
       this.gameState = GameState.FINISHED
+      if (winner.gameFinished && winner.winner) {
+        setTimeout(()=> {
+          alert(`Jogador: "${winner.winner}" venceu!`)
+        }, delay)
+      }
+      else {
+        setTimeout(()=> {
+          alert(`Deu velha! Comece outro jogo!`)
+        }, delay)
+      }
     }
   }
 
   private validateMove(row: number, column: number): void {
-    if (this.getGameWinner()) {
-      throw new Error("Esta partida já encerrou, inicie outra!")
-    }
     if (this.grid[row][column]) {
       throw new Error("Você não pode jogar nesta posição, escolha outra!")
+    }
+    if (this.getGameWinner().gameFinished) {
+      throw new Error("É necessário iniciar a partida!")
     }
   }
 
@@ -62,23 +75,23 @@ export class AppComponent {
 
     // Verificando vencedor horizontalmente:
     const hasAWinnerHorizontally = this.grid.some(row => {
-      const allEqualInRow = row.every(value => value == row[0])
+      const allEqualInRow = row.every(value => value == row[0] && value)
       if (allEqualInRow) winner = row[0]
       return allEqualInRow
     })
     if (hasAWinnerHorizontally) return {gameFinished: true, winner}
 
     // Verificando vencedor verticalmente:
-    for (let row = 0; row < 3; row++) {
-      const column = [this.grid[row][0], this.grid[row][1], this.grid[row][2]]
-      const allEqualInColumn = column.every(value => value === column[0])
+    for (let columnIndex = 0; columnIndex < 3; columnIndex++) {
+      const column = [this.grid[0][columnIndex], this.grid[1][columnIndex], this.grid[2][columnIndex]]
+      const allEqualInColumn = column.every(value => value === column[0] && value)
       if (allEqualInColumn) return {gameFinished: true, winner: column[0]}
     }
 
     // Verificando vencedor diagonalmente:
-    const topLeftToRightBottom = this.grid[0][0] === this.grid[1][1] && this.grid[0][0] === this.grid[2][2]
+    const topLeftToRightBottom = this.grid[0][0] === this.grid[1][1] && this.grid[0][0] === this.grid[2][2] && this.grid[0][0]
     if (topLeftToRightBottom) return {gameFinished: true, winner: this.grid[0][0]}
-    const topRightToLeftBottom = this.grid[0][2] === this.grid[1][1] && this.grid[0][2] === this.grid[2][0]
+    const topRightToLeftBottom = this.grid[0][2] === this.grid[1][1] && this.grid[0][2] === this.grid[2][0] && this.grid[0][2]
     if (topRightToLeftBottom) return {gameFinished: true, winner: this.grid[0][2]}
 
     // Checando se deu velha:
