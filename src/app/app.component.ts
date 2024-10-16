@@ -4,11 +4,12 @@ import {NgForOf} from "@angular/common";
 import {getEmptyGrid} from "./assets/assets";
 import {GameState} from './enums/GameState';
 import {GameWinner} from "./types/GameWinner";
+import {ScoreboardComponent} from "./components/scoreboard/scoreboard.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NgForOf],
+  imports: [RouterOutlet, NgForOf, ScoreboardComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

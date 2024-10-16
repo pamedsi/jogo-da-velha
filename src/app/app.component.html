@@ -8,24 +8,13 @@
   </div>
 
   <section class="container">
-    <div class="players-draw-container">
-      <div class="player-x">
-        <div>Player X</div>
-        <div class="counter">{{xScore}}</div>
-      </div>
-      <div class="draw">
-        <div>
-          <div>Draw</div>
-          <div class="counter">{{draws}}</div>
-        </div>
-      </div>
-      <div class="player-o">
-          <div>Player O</div>
-          <div class="counter">{{oScore}}</div>
-        </div>
-      </div>
+  <app-scoreboard
+    [xScore]="xScore"
+    [oScore]="oScore"
+    [draws]="draws"
+  ></app-scoreboard>
 
-    <div class="grid-container">
+    <div class="grid">
       <div *ngFor="let row of grid; let r = index;" class="row">
         <span *ngFor="let column of row; let c = index;">
           <button class="grid-item" (click)="play(r, c)">{{column}}</button>
