@@ -1,0 +1,7 @@
+<div class="grid">
+  <div *ngFor="let row of grid; let r = index;" class="row">
+        <span *ngFor="let value of row; let c = index;">
+          <button class="grid-item" (click)="play(r, c)">{{value}}</button>
+        </span>
+  </div>
+</div>

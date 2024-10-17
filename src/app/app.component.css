@@ -54,66 +54,6 @@ body {
   border-radius: 20px;
 }
 
-.players-draw-container {
-  display: flex;
-  justify-content: space-between;
-  width: 294px;
-  height: 68px;
-
-}
-
-.player-x, .draw, .player-o {
-  width: 92px;
-  height: 70px;
-  padding-top: 10px;
-  text-align: center;
-  border-radius: 10px;
-  font-family: "Fredoka", sans-serif;
-
-}
-
-.counter {
-  font-size: 2rem;
-}
-
-.player-x {
-  background-color: #72CFF9;
-  margin-right: 10px;
-}
-
-.draw {
-  background-color: white;
-}
-
-.player-o {
-  background-color: #DCBF3F;
-  margin-left: 10px;
-}
-
-.grid-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 294px;
-  height: 294px;
-  margin-top: 35px;
-  background-color: #2B0040;
-}
-
-.grid-item {
-  margin: 0.5rem;
-  background-color: #43115B;
-  color: white;
-  font-size: 3rem;
-  width: 92px;
-  height: 92px;
-  border-radius: 10px;
-}
-
-.grid-item:hover {
-  background-color: #5A1E76;
-}
-
 .game-state-container {
   margin-top: 90px;
 }
@@ -146,8 +86,4 @@ body {
 
 .o {
   background-color: #DCBF3F;
-}
-
-.row {
-  display: flex;
 }

@@ -1,4 +1,6 @@
-export const getEmptyGrid = (): string[][]  => {
+import {Cell} from "../types/Cell";
+
+export const getEmptyGrid = (): Cell[][]  => {
   return[
           ["", "", ""],
           ["", "", ""],

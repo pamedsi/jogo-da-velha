@@ -1,0 +1,33 @@
+.scoreboard {
+  display: flex;
+  justify-content: space-between;
+  width: 294px;
+  height: 68px;
+}
+
+.player-x, .draw, .player-o {
+  width: 92px;
+  height: 70px;
+  padding-top: 10px;
+  text-align: center;
+  border-radius: 10px;
+  font-family: "Fredoka", sans-serif;
+}
+
+.player-x {
+  background-color: #72CFF9;
+  margin-right: 10px;
+}
+
+.draw {
+  background-color: white;
+}
+
+.player-o {
+  background-color: #DCBF3F;
+  margin-left: 10px;
+}
+
+.counter {
+  font-size: 2rem;
+}

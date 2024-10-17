@@ -8,36 +8,26 @@
   </div>
 
   <section class="container">
-    <div class="players-draw-container">
-      <div class="player-x">
-        <div>Player X</div>
-        <div class="counter">{{xScore}}</div>
-      </div>
-      <div class="draw">
-        <div>
-          <div>Draw</div>
-          <div class="counter">{{draws}}</div>
-        </div>
-      </div>
-      <div class="player-o">
-          <div>Player O</div>
-          <div class="counter">{{oScore}}</div>
-        </div>
-      </div>
+  <app-scoreboard
+    [xScore]="xScore"
+    [oScore]="oScore"
+    [draws]="draws"
+  ></app-scoreboard>
 
-    <div class="grid-container">
-      <div *ngFor="let row of grid; let r = index;" class="row">
-        <span *ngFor="let column of row; let c = index;">
-          <button class="grid-item" (click)="play(r, c)">{{column}}</button>
-        </span>
-      </div>
-    </div>
+  <app-grid
+    [possibleToFinish]="moves >= 4"
+    [thereAreMovesLeft]="moves < 8"
+    [currentPlayer]="turn"
+    [grid]="grid"
+    (gameFinished)="score($event)"
+    (moveMade)="makeAMove()"
+  ></app-grid>
 
     <div class="game-state-container">
       @if (gameState === GameState.WAITING_START || gameState === GameState.FINISHED) {
         <button class="new-game-button" (click)="startNewGame()">NEW GAME</button>
       }
-      @else if (gameState === GameState.X_TURN) {
+      @else if (turn === "X") {
         <button class="turn x">X TURN</button>
       }
       @else {
