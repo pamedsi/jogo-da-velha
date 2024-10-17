@@ -1,9 +1,8 @@
-import {Component, EventEmitter, Output} from '@angular/core';
-import {getEmptyGrid} from "../../assets/assets";
-import {GameStatus} from "../../types/GameStatus";
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {MatchInfo} from "../../types/MatchInfo";
 import {NgForOf} from "@angular/common";
-import {GameState} from "../../enums/GameState";
 import {Move} from "../../types/Move";
+import {Cell} from "../../types/Cell";
 
 @Component({
   selector: 'app-grid',
@@ -15,56 +14,66 @@ import {Move} from "../../types/Move";
   styleUrl: './grid.component.css'
 })
 export class GridComponent {
-  grid: string[][] = getEmptyGrid()
-  @Output() gameFinished = new EventEmitter<GameStatus>();
+  @Input() grid!: Cell[][]
+  @Input() possibleToFinish!: boolean;
+  @Input() currentPlayer!: Cell
+  @Output() moveMade = new EventEmitter<Move>()
+  @Output() gameFinished = new EventEmitter<MatchInfo>();
+  @Input() thereAreMovesLeft!: boolean;
 
-  play({player, row, column}: Move): void {
+  play(row: number, column: number): void {
     this.validateMove(row, column);
-    this.grid[row][column] = player
-
-
+    this.grid[row][column] = this.currentPlayer
+    this.moveMade.emit({row, column, player: this.currentPlayer} as Move)
+    if (this.possibleToFinish) {
+      const gameStatus = this.checkIfMatchIsOver()
+      if (gameStatus.finished) {
+        this.gameFinished.emit(gameStatus)
+      }
+    }
   }
 
   private validateMove(row: number, column: number): void {
     if (this.grid[row][column]) {
       throw new Error("Você não pode jogar nesta posição, escolha outra!")
     }
-    if (this.getGameWinner().finished) {
-      throw new Error("É necessário iniciar a partida!")
-    }
   }
 
-  private getGameWinner(): GameStatus {
-    let winner = ""
+  private checkIfMatchIsOver(): MatchInfo {
+    const horizontally = this.checkIfThereIsAWinnerHorizontally()
+    if (horizontally) return horizontally
+    const vertically = this.checkIfThereIsAWinnerVertically()
+    if (vertically) return vertically
+    const diagonally = this.checkIfThereIsAWinnerDiagonally()
+    if (diagonally) return diagonally
+    return {finished: !this.thereAreMovesLeft, winner: ""}
+  }
 
-    // Com menos de 5 movimentos não é possível ter um vencedor:
-    if (this.moves < 5) return {finished: false, winner: ""}
-
-    // Verificando vencedor horizontalmente:
+  private checkIfThereIsAWinnerHorizontally(): MatchInfo | false {
+    let winner: Cell = ""
     const hasAWinnerHorizontally = this.grid.some(row => {
       const allEqualInRow = row.every(value => value == row[0] && value)
       if (allEqualInRow) winner = row[0]
       return allEqualInRow
     })
     if (hasAWinnerHorizontally) return {finished: true, winner}
+    return false
+  }
 
-    // Verificando vencedor verticalmente:
+  private checkIfThereIsAWinnerVertically(): MatchInfo | false {
     for (let columnIndex = 0; columnIndex < 3; columnIndex++) {
       const column = [this.grid[0][columnIndex], this.grid[1][columnIndex], this.grid[2][columnIndex]]
       const allEqualInColumn = column.every(value => value === column[0] && value)
       if (allEqualInColumn) return {finished: true, winner: column[0]}
     }
+    return false
+  }
 
-    // Verificando vencedor diagonalmente:
+  private checkIfThereIsAWinnerDiagonally(): MatchInfo | false {
     const topLeftToRightBottom = this.grid[0][0] === this.grid[1][1] && this.grid[0][0] === this.grid[2][2] && this.grid[0][0]
     if (topLeftToRightBottom) return {finished: true, winner: this.grid[0][0]}
     const topRightToLeftBottom = this.grid[0][2] === this.grid[1][1] && this.grid[0][2] === this.grid[2][0] && this.grid[0][2]
     if (topRightToLeftBottom) return {finished: true, winner: this.grid[0][2]}
-
-    // Checando se deu velha:
-    if (this.moves >= 9) return {finished: true, winner: ""}
-
-    // Continuando o jogo:
-    return {finished: false, winner: ""}
+    return false
   }
 }
