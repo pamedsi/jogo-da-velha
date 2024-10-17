@@ -17,9 +17,10 @@ export class GridComponent {
   @Input() grid!: Cell[][]
   @Input() possibleToFinish!: boolean;
   @Input() currentPlayer!: Cell
-  @Output() moveMade = new EventEmitter<Move>()
-  @Output() gameFinished = new EventEmitter<MatchInfo>();
   @Input() thereAreMovesLeft!: boolean;
+  @Input() matchStarted!: boolean;
+  @Output() matchFinished = new EventEmitter<MatchInfo>();
+  @Output() moveMade = new EventEmitter<Move>()
 
   play(row: number, column: number): void {
     this.validateMove(row, column);
@@ -28,12 +29,15 @@ export class GridComponent {
     if (this.possibleToFinish) {
       const gameStatus = this.checkIfMatchIsOver()
       if (gameStatus.finished) {
-        this.gameFinished.emit(gameStatus)
+        this.matchFinished.emit(gameStatus)
       }
     }
   }
 
   private validateMove(row: number, column: number): void {
+    if (!this.matchStarted) {
+      throw new Error("Você precisa iniciar uma nova partida!")
+    }
     if (this.grid[row][column]) {
       throw new Error("Você não pode jogar nesta posição, escolha outra!")
     }

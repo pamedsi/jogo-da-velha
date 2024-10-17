@@ -32,8 +32,8 @@ export class AppComponent {
   }
 
   makeAMove() {
-    this.moves++
-    this.switchTurn()
+      this.moves++
+      this.switchTurn()
   }
 
   switchTurn() {

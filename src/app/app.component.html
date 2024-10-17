@@ -19,8 +19,9 @@
     [thereAreMovesLeft]="moves < 8"
     [currentPlayer]="turn"
     [grid]="grid"
-    (gameFinished)="score($event)"
+    (matchFinished)="score($event)"
     (moveMade)="makeAMove()"
+    [matchStarted]="gameState === GameState.STARTED"
   ></app-grid>
 
     <div class="game-state-container">
