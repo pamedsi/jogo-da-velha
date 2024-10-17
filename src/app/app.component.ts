@@ -4,7 +4,6 @@ import {NgForOf} from "@angular/common";
 import {MatchState} from './enums/MatchState';
 import {ScoreboardComponent} from "./components/scoreboard/scoreboard.component";
 import {GridComponent} from "./components/grid/grid.component";
-import {Move} from "./types/Move";
 import {MatchInfo} from "./types/MatchInfo";
 import {Cell} from "./types/Cell";
 import {getEmptyGrid} from "./assets/assets";
