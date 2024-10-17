@@ -14,13 +14,20 @@
     [draws]="draws"
   ></app-scoreboard>
 
-  <app-grid></app-grid>
+  <app-grid
+    [possibleToFinish]="moves >= 4"
+    [thereAreMovesLeft]="moves < 8"
+    [currentPlayer]="turn"
+    [grid]="grid"
+    (gameFinished)="score($event)"
+    (moveMade)="makeAMove()"
+  ></app-grid>
 
     <div class="game-state-container">
       @if (gameState === GameState.WAITING_START || gameState === GameState.FINISHED) {
         <button class="new-game-button" (click)="startNewGame()">NEW GAME</button>
       }
-      @else if (gameState === GameState.X_TURN) {
+      @else if (turn === "X") {
         <button class="turn x">X TURN</button>
       }
       @else {

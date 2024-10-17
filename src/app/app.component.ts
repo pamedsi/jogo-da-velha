@@ -1,9 +1,13 @@
 import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {NgForOf} from "@angular/common";
-import {GameState} from './enums/GameState';
+import {MatchState} from './enums/MatchState';
 import {ScoreboardComponent} from "./components/scoreboard/scoreboard.component";
 import {GridComponent} from "./components/grid/grid.component";
+import {Move} from "./types/Move";
+import {MatchInfo} from "./types/MatchInfo";
+import {Cell} from "./types/Cell";
+import {getEmptyGrid} from "./assets/assets";
 
 @Component({
   selector: 'app-root',
@@ -17,31 +21,53 @@ export class AppComponent {
   oScore: number = 0
   draws: number = 0
   moves: number = 0
-  gameState: GameState = GameState.WAITING_START
-  protected readonly GameState = GameState
+  turn: "X" | "O" = "X"
+  gameState: MatchState = MatchState.WAITING_START
+  grid: Cell[][] = getEmptyGrid()
+  protected readonly GameState = MatchState
 
   startNewGame(): void {
-    this.gameState = GameState.X_TURN
+    this.gameState = MatchState.STARTED
     this.moves = 0
+    this.grid = getEmptyGrid()
   }
 
-  score(player: string): void {
-
+  makeAMove() {
+    this.moves++
+    this.switchTurn()
   }
 
-  finishGame(winner: string): void {
+  switchTurn() {
+    this.turn === "X" ? this.turn = "O" : this.turn = "X"
+  }
+
+  score(matchInfo: MatchInfo): void {
+    if(matchInfo.finished) {
+      switch (matchInfo.winner) {
+        case "X":
+          this.xScore++
+          break
+        case "O":
+          this.oScore++
+          break
+        default:
+          this.draws++
+      }
+      this.finishMatch(matchInfo.winner)
+    }
+  }
+
+  finishMatch(winner: string): void {
     const delay = 100
-    this.gameState = GameState.FINISHED
+    this.gameState = MatchState.FINISHED
     if (winner) {
       setTimeout(()=> {
           alert(`Jogador: "${winner}" venceu!`)
-          winner === "X" ? this.xScore++ : this.oScore++
       }, delay)
     }
     else {
       setTimeout(()=> {
         alert(`Deu velha! Comece outro jogo!`)
-        this.draws++
       }, delay)
     }
   }
