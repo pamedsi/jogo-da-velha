@@ -1,28 +1,20 @@
 <body>
-  <div class="title">
-    <h1>
-      <span class="word-tic">Tic.</span><br>
-      <span class="word-tac">Tac.</span><br>
-      <span class="word-toe">Toe.</span>
-    </h1>
-  </div>
+  <main class="container">
+    <app-scoreboard
+      [xScore]="xScore"
+      [oScore]="oScore"
+      [draws]="draws"
+    ></app-scoreboard>
 
-  <section class="container">
-  <app-scoreboard
-    [xScore]="xScore"
-    [oScore]="oScore"
-    [draws]="draws"
-  ></app-scoreboard>
-
-  <app-grid
-    [possibleToFinish]="moves >= 4"
-    [thereAreMovesLeft]="moves < 8"
-    [currentPlayer]="turn"
-    [grid]="grid"
-    (matchFinished)="score($event)"
-    (moveMade)="makeAMove()"
-    [matchStarted]="gameState === GameState.STARTED"
-  ></app-grid>
+    <app-grid
+      [possibleToFinish]="moves >= 4"
+      [thereAreMovesLeft]="moves < 8"
+      [currentPlayer]="turn"
+      [grid]="grid"
+      (matchFinished)="score($event)"
+      (moveMade)="makeAMove()"
+      [matchStarted]="gameState === GameState.STARTED"
+    ></app-grid>
 
     <div class="game-state-container">
       @if (gameState === GameState.WAITING_START || gameState === GameState.FINISHED) {
@@ -35,5 +27,13 @@
         <button class="turn o">O TURN</button>
       }
     </div>
-  </section>
+  </main>
+
+  <footer class="logo-container">
+    <h1 class="logo">
+      <div class="word-tic">Tic.</div>
+      <div class="word-tac">Tac.</div>
+      <div class="word-toe">Toe.</div>
+    </h1>
+  </footer>
 </body>
