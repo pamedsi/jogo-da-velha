@@ -1,0 +1,43 @@
+<body>
+  <header>
+    <h1>Você é o jogador: {{undefined}}</h1>
+  </header>
+
+  <main class="container">
+    <app-scoreboard
+      [xScore]="xScore"
+      [oScore]="oScore"
+      [draws]="draws"
+    ></app-scoreboard>
+
+    <app-grid
+      [possibleToFinish]="moves >= 4"
+      [thereAreMovesLeft]="moves < 8"
+      [currentPlayer]="turn"
+      [grid]="grid"
+      (matchFinished)="score($event)"
+      (moveMade)="makeAMove()"
+      [matchStarted]="gameState === GameState.STARTED"
+    ></app-grid>
+
+    <div class="game-state-container">
+      @if (gameState === GameState.WAITING_START || gameState === GameState.FINISHED) {
+        <button class="new-game-button" (click)="startNewGame()">NEW GAME</button>
+      }
+      @else if (turn === "X") {
+        <button class="turn x">X TURN</button>
+      }
+      @else {
+        <button class="turn o">O TURN</button>
+      }
+    </div>
+  </main>
+
+  <footer class="logo-container">
+    <h1 class="logo">
+      <div class="word-tic">Tic.</div>
+      <div class="word-tac">Tac.</div>
+      <div class="word-toe">Toe.</div>
+    </h1>
+  </footer>
+</body>
