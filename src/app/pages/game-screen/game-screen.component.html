@@ -1,6 +1,7 @@
 <body>
+<!--  <span *ngIf="!player" class="spinner"></span>-->
   <header>
-    <h1>Você é o jogador: {{undefined}}</h1>
+    <h1>Você é o jogador: <span *ngIf="player">{{player}}</span></h1>
   </header>
 
   <main class="container">

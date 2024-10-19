@@ -1,19 +1,23 @@
 import { Component } from '@angular/core';
-import {GridComponent} from "../grid/grid.component";
-import {ScoreboardComponent} from "../scoreboard/scoreboard.component";
+import {GridComponent} from "../../components/grid/grid.component";
+import {ScoreboardComponent} from "../../components/scoreboard/scoreboard.component";
 import {MatchState} from "../../enums/MatchState";
 import {Cell} from "../../types/Cell";
 import {getEmptyGrid} from "../../../assets/assets";
 import {MatchInfo} from "../../types/MatchInfo";
 import {Player} from "../../types/Player";
+import {NgIf} from "@angular/common";
+import {SessionService} from "../../services/SessionService";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-game-screen',
   standalone: true,
-    imports: [
-        GridComponent,
-        ScoreboardComponent
-    ],
+  imports: [
+    GridComponent,
+    ScoreboardComponent,
+    NgIf
+  ],
   templateUrl: './game-screen.component.html',
   styleUrl: './game-screen.component.css'
 })
@@ -23,9 +27,28 @@ export class GameScreenComponent {
   draws: number = 0
   moves: number = 0
   turn: Player = "X"
+  player!: Player
   gameState: MatchState = MatchState.WAITING_START
   grid: Cell[][] = getEmptyGrid()
   protected readonly GameState = MatchState
+
+  constructor(private sessionService: SessionService, private router: Router) {
+
+  }
+
+  ngOnInit() {
+    const sessionID = localStorage.getItem('id')
+    if (sessionID) {
+      this.sessionService.validateSession(sessionID).subscribe({
+        next: (response) => {
+          this.player = response.player;
+        }
+      })
+    }
+    else {
+      this.router.navigate([''])
+    }
+  }
 
   startNewGame(): void {
     this.gameState = MatchState.STARTED
