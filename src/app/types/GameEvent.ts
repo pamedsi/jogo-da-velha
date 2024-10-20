@@ -1,0 +1,6 @@
+export enum GameEvent {
+  PLAYER_JOINED = 'PLAYER_JOINED',
+  MATCH_STARTED = 'MATCH_STARTED',
+  MOVE = 'MOVE',
+  MATCH_ENDED = 'MATCH_ENDED'
+}
