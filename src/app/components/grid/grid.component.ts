@@ -3,6 +3,7 @@ import {MatchInfo} from "../../types/MatchInfo";
 import {NgForOf} from "@angular/common";
 import {Move} from "../../types/Move";
 import {Cell} from "../../types/Cell";
+import {GameStatus} from "../../types/GameStatusDTO";
 
 @Component({
   selector: 'app-grid',
@@ -16,22 +17,33 @@ import {Cell} from "../../types/Cell";
 export class GridComponent {
   @Input() grid!: Cell[][]
   @Input() possibleToFinish!: boolean;
+  @Input() gameStatus!: GameStatus
   @Input() currentPlayer!: Cell
   @Input() thereAreMovesLeft!: boolean;
   @Input() matchStarted!: boolean;
   @Output() matchFinished = new EventEmitter<MatchInfo>();
   @Output() moveMade = new EventEmitter<Move>()
 
-  play(row: number, column: number): void {
-    this.validateMove(row, column);
-    this.grid[row][column] = this.currentPlayer
-    this.moveMade.emit({row, column, player: this.currentPlayer} as Move)
-    if (this.possibleToFinish) {
-      const gameStatus = this.checkIfMatchIsOver()
-      if (gameStatus.finished) {
-        this.matchFinished.emit(gameStatus)
-      }
+  ngOnInit() {
+    if (this.gameStatus === GameStatus.X_TURN) {
+      this.currentPlayer = 'X'
     }
+    else if (this.gameStatus === GameStatus.O_TURN) {
+      this.currentPlayer = 'O'
+    }
+  }
+
+  play(row: number, column: number): void {
+    // TODO
+    // this.validateMove(row, column);
+    // this.grid[row][column] = this.currentPlayer
+    // this.moveMade.emit({row, column, player: this.currentPlayer} as Move)
+    // if (this.possibleToFinish) {
+    //   const gameStatus = this.checkIfMatchIsOver()
+    //   if (gameStatus.finished) {
+    //     this.matchFinished.emit(gameStatus)
+    //   }
+    // }
   }
 
   private validateMove(row: number, column: number): void {
