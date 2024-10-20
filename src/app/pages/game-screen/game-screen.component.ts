@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {GridComponent} from "../../components/grid/grid.component";
 import {ScoreboardComponent} from "../../components/scoreboard/scoreboard.component";
 import {MatchState} from "../../enums/MatchState";
@@ -9,6 +9,8 @@ import {Player} from "../../types/Player";
 import {NgIf} from "@angular/common";
 import {SessionService} from "../../services/SessionService";
 import {Router} from "@angular/router";
+import {GameService} from "../../services/GameService";
+import {GameStatus, GameStatusDTO} from "../../types/GameStatusDTO";
 
 @Component({
   selector: 'app-game-screen',
@@ -26,22 +28,48 @@ export class GameScreenComponent {
   oScore: number = 0
   draws: number = 0
   moves: number = 0
-  turn: Player = "X"
   player!: Player
-  gameState: MatchState = MatchState.WAITING_START
+  gameStatus!: GameStatus
   grid: Cell[][] = getEmptyGrid()
   protected readonly GameState = MatchState
 
-  constructor(private sessionService: SessionService, private router: Router) {
-
-  }
+  constructor (
+    private sessionService: SessionService,
+    private gameService: GameService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
+    this.checkSession()
+    this.getStatus()
+    this.gameService.listenToEvent().subscribe((data) => {
+        // TODO
+      }
+    )
+  }
+
+  getStatus() {
+    this.gameService.getStatus().subscribe(({
+      next: ({status}: GameStatusDTO) => {
+        this.gameStatus = status
+      },
+      error: (error: any) => {
+        alert("Não foi possível obter o status da partida!")
+        console.error(error)
+      }
+    }))
+  }
+
+  checkSession(): void {
     const sessionID = localStorage.getItem('id')
     if (sessionID) {
       this.sessionService.validateSession(sessionID).subscribe({
         next: (response) => {
           this.player = response.player;
+        },
+        error: (response) => {
+          console.error(response)
+          this.router.navigate([''])
         }
       })
     }
@@ -51,9 +79,16 @@ export class GameScreenComponent {
   }
 
   startNewGame(): void {
-    this.gameState = MatchState.STARTED
-    this.moves = 0
-    this.grid = getEmptyGrid()
+    this.gameService.start().subscribe({
+      next: () => {
+        this.gameStatus = GameStatus.STARTED
+        this.grid = getEmptyGrid()
+      },
+      error: (response) => {
+        console.error(response.error.details)
+        alert(response.error.details)
+      }
+    })
   }
 
   makeAMove() {
@@ -62,7 +97,8 @@ export class GameScreenComponent {
   }
 
   switchTurn() {
-    this.turn === "X" ? this.turn = "O" : this.turn = "X"
+    // TODO
+    // this.turn === "X" ? this.turn = "O" : this.turn = "X"
   }
 
   score(matchInfo: MatchInfo): void {
@@ -83,7 +119,7 @@ export class GameScreenComponent {
 
   finishMatch(winner: string): void {
     const delay = 100
-    this.gameState = MatchState.FINISHED
+    this.gameStatus = GameStatus.FINISHED
     if (winner) {
       setTimeout(()=> {
         alert(`Jogador: "${winner}" venceu!`)
@@ -95,4 +131,6 @@ export class GameScreenComponent {
       }, delay)
     }
   }
+
+  protected readonly GameStatus = GameStatus;
 }

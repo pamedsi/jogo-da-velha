@@ -14,21 +14,21 @@
     <app-grid
       [possibleToFinish]="moves >= 4"
       [thereAreMovesLeft]="moves < 8"
-      [currentPlayer]="turn"
+      [gameStatus]="gameStatus"
       [grid]="grid"
       (matchFinished)="score($event)"
       (moveMade)="makeAMove()"
-      [matchStarted]="gameState === GameState.STARTED"
+      [matchStarted]="gameStatus === GameStatus.STARTED"
     ></app-grid>
 
     <div class="game-state-container">
-      @if (gameState === GameState.WAITING_START || gameState === GameState.FINISHED) {
+      @if (gameStatus !== GameStatus.X_TURN && gameStatus !== GameStatus.O_TURN) {
         <button class="new-game-button" (click)="startNewGame()">NEW GAME</button>
       }
-      @else if (turn === "X") {
+      @else if (gameStatus === GameStatus.X_TURN) {
         <button class="turn x">X TURN</button>
       }
-      @else {
+      @else if (gameStatus === GameStatus.O_TURN) {
         <button class="turn o">O TURN</button>
       }
     </div>
