@@ -3,7 +3,7 @@ import {MatchInfo} from "../../types/MatchInfo";
 import {NgForOf} from "@angular/common";
 import {Move} from "../../types/Move";
 import {Cell} from "../../types/Cell";
-import {GameStatus} from "../../types/GameStatusDTO";
+import {GameStatus} from "../../enums/GameStatus";
 
 @Component({
   selector: 'app-grid',
@@ -20,7 +20,7 @@ export class GridComponent {
   @Input() gameStatus!: GameStatus
   @Input() currentPlayer!: Cell
   @Input() thereAreMovesLeft!: boolean;
-  @Input() matchStarted!: boolean;
+  // @Input() matchStarted!: boolean;
   @Output() matchFinished = new EventEmitter<MatchInfo>();
   @Output() moveMade = new EventEmitter<Move>()
 
@@ -46,14 +46,14 @@ export class GridComponent {
     // }
   }
 
-  private validateMove(row: number, column: number): void {
-    if (!this.matchStarted) {
-      throw new Error("Você precisa iniciar uma nova partida!")
-    }
-    if (this.grid[row][column]) {
-      throw new Error("Você não pode jogar nesta posição, escolha outra!")
-    }
-  }
+  // private validateMove(row: number, column: number): void {
+  //   if (!this.matchStarted) {
+  //     throw new Error("Você precisa iniciar uma nova partida!")
+  //   }
+  //   if (this.grid[row][column]) {
+  //     throw new Error("Você não pode jogar nesta posição, escolha outra!")
+  //   }
+  // }
 
   private checkIfMatchIsOver(): MatchInfo {
     const horizontally = this.checkIfThereIsAWinnerHorizontally()
