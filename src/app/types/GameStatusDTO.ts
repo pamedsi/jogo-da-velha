@@ -1,10 +1,4 @@
-export enum GameStatus {
-  WAITING_START,
-  X_TURN,
-  O_TURN,
-  STARTED,
-  FINISHED
-}
+import {GameStatus} from "../enums/GameStatus";
 
 export type GameStatusDTO = {
   status: GameStatus
