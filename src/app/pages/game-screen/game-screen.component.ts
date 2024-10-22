@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {GridComponent} from "../../components/grid/grid.component";
 import {ScoreboardComponent} from "../../components/scoreboard/scoreboard.component";
-import {MatchState} from "../../enums/MatchState";
 import {Cell} from "../../types/Cell";
 import {getEmptyGrid} from "../../../assets/assets";
 import {MatchInfo} from "../../types/MatchInfo";
@@ -10,7 +9,10 @@ import {NgIf} from "@angular/common";
 import {SessionService} from "../../services/SessionService";
 import {Router} from "@angular/router";
 import {GameService} from "../../services/GameService";
-import {GameStatus, GameStatusDTO} from "../../types/GameStatusDTO";
+import {GameStatusDTO} from "../../types/GameStatusDTO";
+import {GameEvent} from "../../enums/GameEvent";
+import {GameEventDTO} from "../../types/dto/GameEventDTO";
+import {GameStatus} from "../../enums/GameStatus";
 
 @Component({
   selector: 'app-game-screen',
@@ -31,7 +33,7 @@ export class GameScreenComponent {
   player!: Player
   gameStatus!: GameStatus
   grid: Cell[][] = getEmptyGrid()
-  protected readonly GameState = MatchState
+  protected readonly GameStatus = GameStatus;
 
   constructor (
     private sessionService: SessionService,
@@ -43,7 +45,7 @@ export class GameScreenComponent {
     this.checkSession()
     this.getStatus()
     this.gameService.listenToEvent().subscribe((data) => {
-        // TODO
+        this.handleEvent(data)
       }
     )
   }
@@ -81,7 +83,7 @@ export class GameScreenComponent {
   startNewGame(): void {
     this.gameService.start().subscribe({
       next: () => {
-        this.gameStatus = GameStatus.STARTED
+        this.gameStatus = GameStatus.X_TURN
         this.grid = getEmptyGrid()
       },
       error: (response) => {
@@ -119,7 +121,7 @@ export class GameScreenComponent {
 
   finishMatch(winner: string): void {
     const delay = 100
-    this.gameStatus = GameStatus.FINISHED
+    this.gameStatus = GameStatus.WAITING_START
     if (winner) {
       setTimeout(()=> {
         alert(`Jogador: "${winner}" venceu!`)
@@ -132,5 +134,25 @@ export class GameScreenComponent {
     }
   }
 
-  protected readonly GameStatus = GameStatus;
+  private handleEvent(event: GameEventDTO) {
+    switch (event.type) {
+      case GameEvent.FIRST_PLAYER_JOINED:
+        this.gameStatus = GameStatus.WAITING_SECOND_PLAYER;
+        break;
+      case GameEvent.BOTH_PLAYERS_JOINED:
+        this.gameStatus = GameStatus.WAITING_START;
+        break;
+      case GameEvent.MATCH_STARTED:
+        this.gameStatus = GameStatus.X_TURN;
+        break;
+      case GameEvent.MOVE:
+        if (event.move.player === 'X') {
+          this.gameStatus = GameStatus.O_TURN
+        }
+        else {
+          this.gameStatus = GameStatus.X_TURN;
+        }
+        break;
+    }
+  }
 }
