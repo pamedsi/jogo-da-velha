@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectorRef, Component} from '@angular/core';
 import {GridComponent} from "../../components/grid/grid.component";
 import {ScoreboardComponent} from "../../components/scoreboard/scoreboard.component";
 import {Cell} from "../../types/Cell";
@@ -44,6 +44,9 @@ export class GameScreenComponent {
   ngOnInit() {
     this.checkSession()
     this.getStatus()
+  }
+
+  listenToWSEvents () {
     this.gameService.listenToEvent().subscribe((data) => {
         this.handleEvent(data)
       }
@@ -68,6 +71,7 @@ export class GameScreenComponent {
       this.sessionService.validateSession(sessionID).subscribe({
         next: (response) => {
           this.player = response.player;
+          this.listenToWSEvents()
         },
         error: (response) => {
           console.error(response)
