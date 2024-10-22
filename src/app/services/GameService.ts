@@ -1,10 +1,9 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
-import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
 import {WebSocketService} from "./WebSocketService";
-import {GameEvent} from "../types/GameEvent";
 import {GameStatusDTO} from "../types/GameStatusDTO";
+import {GameEventDTO} from "../types/dto/GameEventDTO";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +14,7 @@ export class GameService {
   constructor(private http: HttpClient, private webSocketService: WebSocketService) {
   }
 
-  listenToEvent(): Subject<GameEvent> {
+  listenToEvent(): Subject<GameEventDTO> {
     this.webSocketService.connect()
     return this.webSocketService.onMessageReceived
   }
