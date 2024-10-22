@@ -18,11 +18,16 @@
       [grid]="grid"
       (matchFinished)="score($event)"
       (moveMade)="makeAMove()"
-      [matchStarted]="gameStatus === GameStatus.STARTED"
     ></app-grid>
 
     <div class="game-state-container">
-      @if (gameStatus !== GameStatus.X_TURN && gameStatus !== GameStatus.O_TURN) {
+      @if (gameStatus === GameStatus.WAITING_FIRST_PLAYER) {
+        <button class="new-game-button disabled">WAITING FOR FIRST PLAYER...</button>
+      }
+      @else if (gameStatus === GameStatus.WAITING_SECOND_PLAYER) {
+        <button class="new-game-button disabled">WAITING FOR SECOND PLAYER...</button>
+      }
+      @else if (gameStatus === GameStatus.WAITING_START) {
         <button class="new-game-button" (click)="startNewGame()">NEW GAME</button>
       }
       @else if (gameStatus === GameStatus.X_TURN) {
