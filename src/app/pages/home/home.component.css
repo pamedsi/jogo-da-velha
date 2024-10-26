@@ -1,0 +1,5 @@
+body {
+  background-color: #5A1E76;
+  display: flex;
+  flex-direction: column;
+}

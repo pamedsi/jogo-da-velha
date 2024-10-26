@@ -1,0 +1,49 @@
+<body>
+<!--  <span *ngIf="!player" class="spinner"></span>-->
+  <header>
+    <h1>Você é o jogador: <span *ngIf="player">{{player}}</span></h1>
+  </header>
+
+  <main class="container">
+    <app-scoreboard
+      [xScore]="xScore"
+      [oScore]="oScore"
+      [draws]="draws"
+    ></app-scoreboard>
+
+    <app-grid
+      [possibleToFinish]="moves >= 4"
+      [thereAreMovesLeft]="moves < 8"
+      [gameStatus]="gameStatus"
+      [grid]="grid"
+      (matchFinished)="score($event)"
+      (moveMade)="makeAMove()"
+    ></app-grid>
+
+    <div class="game-state-container">
+      @if (gameStatus === GameStatus.WAITING_FIRST_PLAYER) {
+        <button class="new-game-button disabled">WAITING FOR FIRST PLAYER...</button>
+      }
+      @else if (gameStatus === GameStatus.WAITING_SECOND_PLAYER) {
+        <button class="new-game-button disabled">WAITING FOR SECOND PLAYER...</button>
+      }
+      @else if (gameStatus === GameStatus.WAITING_START) {
+        <button class="new-game-button" (click)="startNewGame()">NEW GAME</button>
+      }
+      @else if (gameStatus === GameStatus.X_TURN) {
+        <button class="turn x">X TURN</button>
+      }
+      @else if (gameStatus === GameStatus.O_TURN) {
+        <button class="turn o">O TURN</button>
+      }
+    </div>
+  </main>
+
+  <footer class="logo-container">
+    <h1 class="logo">
+      <div class="word-tic">Tic.</div>
+      <div class="word-tac">Tac.</div>
+      <div class="word-toe">Toe.</div>
+    </h1>
+  </footer>
+</body>
