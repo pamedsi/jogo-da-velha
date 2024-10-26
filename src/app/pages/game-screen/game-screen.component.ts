@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {GridComponent} from "../../components/grid/grid.component";
 import {ScoreboardComponent} from "../../components/scoreboard/scoreboard.component";
 import {Cell} from "../../types/Cell";
