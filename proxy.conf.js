@@ -1,7 +1,7 @@
-{
+module.exports = {
   "/server/**": {
-    "target": "http://localhost:8080",
-    "secure": false,
+    "target": process.env.SERVER_URL,
+    "secure": true,
     "pathRewrite": { "^/server": "" },
     "changeOrigin": true
   }
