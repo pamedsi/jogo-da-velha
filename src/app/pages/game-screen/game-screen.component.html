@@ -22,9 +22,12 @@
 
     <div class="game-state-container">
       @if (gameStatus === GameStatus.WAITING_FIRST_PLAYER) {
-        <button class="new-game-button disabled">WAITING FOR FIRST PLAYER...</button>
+        <button class="new-game-button disabled">CONNECTING...</button>
       }
-      @else if (gameStatus === GameStatus.WAITING_SECOND_PLAYER) {
+      @else if (gameStatus === GameStatus.WAITING_SECOND_PLAYER && !thisPlayerIsConnectedWithWS) {
+        <button class="new-game-button disabled">CONNECTING...</button>
+      }
+      @else if (gameStatus === GameStatus.WAITING_SECOND_PLAYER && thisPlayerIsConnectedWithWS) {
         <button class="new-game-button disabled">WAITING FOR SECOND PLAYER...</button>
       }
       @else if (gameStatus === GameStatus.WAITING_START) {
