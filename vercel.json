@@ -1,15 +1,9 @@
 {
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "package.json",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/server/**",
-      "dest": "$SERVER_URL"
+      "source": "/server/:match*",
+      "destination": "https://tic-tac-toe-server-fllp.onrender.com/:match*"
     }
   ]
 }
