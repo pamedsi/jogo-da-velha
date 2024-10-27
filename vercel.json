@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/server/:match*",
-      "destination": "${SERVER_URL}/:match*"
+      "destination": "https://tic-tac-toe-server-fllp.onrender.com/:match*"
     }
   ]
 }
