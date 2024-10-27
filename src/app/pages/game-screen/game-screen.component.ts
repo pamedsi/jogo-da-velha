@@ -13,6 +13,7 @@ import {GameStatusDTO} from "../../types/GameStatusDTO";
 import {GameEvent} from "../../enums/GameEvent";
 import {GameEventDTO} from "../../types/dto/GameEventDTO";
 import {GameStatus} from "../../enums/GameStatus";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-game-screen',
@@ -31,6 +32,8 @@ export class GameScreenComponent {
   draws: number = 0
   moves: number = 0
   player!: Player
+  thisPlayerIsConnectedWithWS: boolean = false
+  private onConnectWS: Subject<void> = new Subject()
   gameStatus!: GameStatus
   grid: Cell[][] = getEmptyGrid()
   protected readonly GameStatus = GameStatus;
@@ -44,10 +47,23 @@ export class GameScreenComponent {
   ngOnInit() {
     this.checkSession()
     this.getStatus()
+    this.setThisPlayerConnectedWithWS()
+  }
+
+  setThisPlayerConnectedWithWS() {
+    this.onConnectWS.subscribe(({
+      next: () => {
+        this.thisPlayerIsConnectedWithWS = true
+        this.getStatus()
+      },
+      error: (error) => {
+        console.error(error)
+    }
+    }))
   }
 
   listenToWSEvents () {
-    this.gameService.listenToEvent().subscribe((data) => {
+    this.gameService.listenToEvent(this.onConnectWS).subscribe((data) => {
         this.handleEvent(data)
       }
     )

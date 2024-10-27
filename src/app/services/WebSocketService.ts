@@ -13,13 +13,14 @@ export class WebSocketService {
   stompClient!: Client
   onMessageReceived: Subject<GameEventDTO> = new Subject()
 
-  connect() {
+  connect(onConnectWS: Subject<void>) {
     const sessionID = localStorage.getItem('id')
     const ws = SockJS(this.url)
     this.stompClient = Stomp.over(ws)
     this.stompClient.connect(
       { sessionID },
       () => {
+        onConnectWS.next()
         this.stompClient.subscribe('/topic/game', (gameEvent: any) => {
           this.onMessageReceived.next(JSON.parse(gameEvent.body) as GameEventDTO)
         })

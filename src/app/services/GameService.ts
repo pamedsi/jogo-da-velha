@@ -14,8 +14,8 @@ export class GameService {
   constructor(private http: HttpClient, private webSocketService: WebSocketService) {
   }
 
-  listenToEvent(): Subject<GameEventDTO> {
-    this.webSocketService.connect()
+  listenToEvent(onConnectWS: Subject<void>): Subject<GameEventDTO> {
+    this.webSocketService.connect(onConnectWS)
     return this.webSocketService.onMessageReceived
   }
 
