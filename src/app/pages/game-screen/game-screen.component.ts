@@ -13,6 +13,7 @@ import {GameDTO} from "../../types/GameDTO";
 import {GameStatus} from "../../enums/GameStatus";
 import {Subject} from "rxjs";
 import {MoveRequest} from "../../types/dto/MoveRequest";
+import {GameEvent} from "../../enums/GameEvent";
 
 @Component({
   selector: 'app-game-screen',
@@ -62,7 +63,10 @@ export class GameScreenComponent {
   }
 
   updateStatusOnEvent (): void {
-    this.gameService.listenToEvent(this.onConnectWS).subscribe(() => {
+    this.gameService.listenToEvent(this.onConnectWS).subscribe((event) => {
+        if (event.type == GameEvent.MATCH_ENDED) {
+          this.handleEnfOfMath(event.winner)
+        }
         this.getStatus()
       }
     )
@@ -123,34 +127,14 @@ export class GameScreenComponent {
     })
   }
 
-  score(matchInfo: MatchInfo): void {
-    if(matchInfo.finished) {
-      switch (matchInfo.winner) {
-        case "X":
-          this.xScore++
-          break
-        case "O":
-          this.oScore++
-          break
-        default:
-          this.draws++
+  handleEnfOfMath(winner: Cell): void {
+    setTimeout(() => {
+      if (winner != "EMPTY") {
+        alert(`Player ${winner} wins!`)
       }
-      this.finishMatch(matchInfo.winner)
-    }
-  }
-
-  finishMatch(winner: string): void {
-    const delay = 100
-    this.gameStatus = GameStatus.WAITING_START
-    if (winner) {
-      setTimeout(()=> {
-        alert(`Jogador: "${winner}" venceu!`)
-      }, delay)
-    }
-    else {
-      setTimeout(()=> {
-        alert(`Deu velha! Comece outro jogo!`)
-      }, delay)
-    }
+      else {
+        alert(`It's a draw game!`)
+      }
+    }, 100)
   }
 }
