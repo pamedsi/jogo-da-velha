@@ -57,41 +57,4 @@ export class GridComponent {
     return  xTurnAndXTriedToMove || oTurnAndOTriedToMove;
   }
 
-  private checkIfMatchIsOver(): MatchInfo {
-    const horizontally = this.checkIfThereIsAWinnerHorizontally()
-    if (horizontally) return horizontally
-    const vertically = this.checkIfThereIsAWinnerVertically()
-    if (vertically) return vertically
-    const diagonally = this.checkIfThereIsAWinnerDiagonally()
-    if (diagonally) return diagonally
-    return {finished: !this.thereAreMovesLeft, winner: "EMPTY"}
-  }
-
-  private checkIfThereIsAWinnerHorizontally(): MatchInfo | false {
-    let winner: Cell = "EMPTY"
-    const hasAWinnerHorizontally = this.grid.some(row => {
-      const allEqualInRow = row.every(value => value == row[0] && value)
-      if (allEqualInRow) winner = row[0]
-      return allEqualInRow
-    })
-    if (hasAWinnerHorizontally) return {finished: true, winner}
-    return false
-  }
-
-  private checkIfThereIsAWinnerVertically(): MatchInfo | false {
-    for (let columnIndex = 0; columnIndex < 3; columnIndex++) {
-      const column = [this.grid[0][columnIndex], this.grid[1][columnIndex], this.grid[2][columnIndex]]
-      const allEqualInColumn = column.every(value => value === column[0] && value)
-      if (allEqualInColumn) return {finished: true, winner: column[0]}
-    }
-    return false
-  }
-
-  private checkIfThereIsAWinnerDiagonally(): MatchInfo | false {
-    const topLeftToRightBottom = this.grid[0][0] === this.grid[1][1] && this.grid[0][0] === this.grid[2][2] && this.grid[0][0] !== "EMPTY"
-    if (topLeftToRightBottom) return {finished: true, winner: this.grid[0][0]}
-    const topRightToLeftBottom = this.grid[0][2] === this.grid[1][1] && this.grid[0][2] === this.grid[2][0] && this.grid[0][2] !== "EMPTY"
-    if (topRightToLeftBottom) return {finished: true, winner: this.grid[0][2]}
-    return false
-  }
 }
