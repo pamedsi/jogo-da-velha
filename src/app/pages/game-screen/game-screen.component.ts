@@ -9,11 +9,10 @@ import {NgIf} from "@angular/common";
 import {SessionService} from "../../services/SessionService";
 import {Router} from "@angular/router";
 import {GameService} from "../../services/GameService";
-import {GameStatusDTO} from "../../types/GameStatusDTO";
-import {GameEvent} from "../../enums/GameEvent";
-import {GameEventDTO} from "../../types/dto/GameEventDTO";
+import {GameDTO} from "../../types/GameDTO";
 import {GameStatus} from "../../enums/GameStatus";
 import {Subject} from "rxjs";
+import {MoveRequest} from "../../types/dto/MoveRequest";
 
 @Component({
   selector: 'app-game-screen',
@@ -35,7 +34,7 @@ export class GameScreenComponent {
   thisPlayerIsConnectedWithWS: boolean = false
   private onConnectWS: Subject<void> = new Subject()
   gameStatus!: GameStatus
-  grid: Cell[][] = getEmptyGrid()
+  grid!: Cell[][]
   protected readonly GameStatus = GameStatus;
 
   constructor (
@@ -50,7 +49,7 @@ export class GameScreenComponent {
     this.setThisPlayerConnectedWithWS()
   }
 
-  setThisPlayerConnectedWithWS() {
+  setThisPlayerConnectedWithWS(): void {
     this.onConnectWS.subscribe(({
       next: () => {
         this.thisPlayerIsConnectedWithWS = true
@@ -62,17 +61,18 @@ export class GameScreenComponent {
     }))
   }
 
-  listenToWSEvents () {
-    this.gameService.listenToEvent(this.onConnectWS).subscribe((data) => {
-        this.handleEvent(data)
+  updateStatusOnEvent (): void {
+    this.gameService.listenToEvent(this.onConnectWS).subscribe(() => {
+        this.getStatus()
       }
     )
   }
 
-  getStatus() {
+  getStatus(): void {
     this.gameService.getStatus().subscribe(({
-      next: ({status}: GameStatusDTO) => {
-        this.gameStatus = status
+      next: (game: GameDTO) => {
+        this.gameStatus = game.status
+        this.grid = game.grid
       },
       error: (error: any) => {
         alert("Não foi possível obter o status da partida!")
@@ -87,7 +87,7 @@ export class GameScreenComponent {
       this.sessionService.validateSession(sessionID).subscribe({
         next: (response) => {
           this.player = response.player;
-          this.listenToWSEvents()
+          this.updateStatusOnEvent()
         },
         error: (response) => {
           console.error(response)
@@ -102,25 +102,25 @@ export class GameScreenComponent {
 
   startNewGame(): void {
     this.gameService.start().subscribe({
-      next: () => {
-        this.gameStatus = GameStatus.X_TURN
-        this.grid = getEmptyGrid()
-      },
+      next: () => console.info("New game started!"),
       error: (response) => {
         console.error(response.error.details)
-        alert(response.error.details)
+        alert("Couldn't start the game!")
+        this.grid = getEmptyGrid()
       }
     })
   }
 
-  makeAMove() {
-    this.moves++
-    this.switchTurn()
-  }
-
-  switchTurn() {
-    // TODO
-    // this.turn === "X" ? this.turn = "O" : this.turn = "X"
+  makeAMove(move: MoveRequest) {
+    this.gameService.move(move).subscribe({
+      next: () => {
+        this.getStatus()
+      },
+      error: (response) => {
+        console.error(response)
+        alert("Couldn't execute the move!")
+      },
+    })
   }
 
   score(matchInfo: MatchInfo): void {
@@ -151,28 +151,6 @@ export class GameScreenComponent {
       setTimeout(()=> {
         alert(`Deu velha! Comece outro jogo!`)
       }, delay)
-    }
-  }
-
-  private handleEvent(event: GameEventDTO) {
-    switch (event.type) {
-      case GameEvent.FIRST_PLAYER_JOINED:
-        this.gameStatus = GameStatus.WAITING_SECOND_PLAYER;
-        break;
-      case GameEvent.BOTH_PLAYERS_JOINED:
-        this.gameStatus = GameStatus.WAITING_START;
-        break;
-      case GameEvent.MATCH_STARTED:
-        this.gameStatus = GameStatus.X_TURN;
-        break;
-      case GameEvent.MOVE:
-        if (event.move.player === 'X') {
-          this.gameStatus = GameStatus.O_TURN
-        }
-        else {
-          this.gameStatus = GameStatus.X_TURN;
-        }
-        break;
     }
   }
 }

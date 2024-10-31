@@ -1,7 +1,7 @@
 import {GameEvent} from "../../enums/GameEvent";
-import {Move} from "../Move";
+import {MoveEvent} from "../MoveEvent";
 
 export type GameEventDTO = {
     type: GameEvent
-    move: Move
+    move: MoveEvent
 }

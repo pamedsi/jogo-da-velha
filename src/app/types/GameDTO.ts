@@ -1,5 +1,7 @@
 import {GameStatus} from "../enums/GameStatus";
+import {Cell} from "./Cell";
 
-export type GameStatusDTO = {
+export type GameDTO = {
   status: GameStatus
+  grid: Cell[][]
 }

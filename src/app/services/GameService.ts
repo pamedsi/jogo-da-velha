@@ -2,8 +2,9 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
 import {WebSocketService} from "./WebSocketService";
-import {GameStatusDTO} from "../types/GameStatusDTO";
+import {GameDTO} from "../types/GameDTO";
 import {GameEventDTO} from "../types/dto/GameEventDTO";
+import {MoveRequest} from "../types/dto/MoveRequest";
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,11 @@ export class GameService {
     return this.http.post<void>(`${this.endpoint}/start`, null)
   }
 
-  getStatus(): Observable<GameStatusDTO> {
-    return this.http.get<GameStatusDTO>(`${this.endpoint}/status`)
+  getStatus(): Observable<GameDTO> {
+    return this.http.get<GameDTO>(`${this.endpoint}/status`)
+  }
+
+  move(move: MoveRequest): Observable<any> {
+    return this.http.post<GameEventDTO>(`${this.endpoint}/move`, move)
   }
 }

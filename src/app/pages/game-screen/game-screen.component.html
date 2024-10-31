@@ -1,7 +1,7 @@
 <body>
 <!--  <span *ngIf="!player" class="spinner"></span>-->
   <header>
-    <h1>Você é o jogador: <span *ngIf="player">{{player}}</span></h1>
+    <h1>You are: <span *ngIf="player">{{player}}</span></h1>
   </header>
 
   <main class="container">
@@ -16,8 +16,9 @@
       [thereAreMovesLeft]="moves < 8"
       [gameStatus]="gameStatus"
       [grid]="grid"
+      [player]="player"
       (matchFinished)="score($event)"
-      (moveMade)="makeAMove()"
+      (moveMade)="makeAMove($event)"
     ></app-grid>
 
     <div class="game-state-container">
