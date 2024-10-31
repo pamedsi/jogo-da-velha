@@ -5,7 +5,6 @@ import {MoveRequest} from "../../types/dto/MoveRequest";
 import {Cell} from "../../types/Cell";
 import {GameStatus} from "../../enums/GameStatus";
 import {Player} from "../../types/Player";
-import {GameService} from "../../services/GameService";
 
 @Component({
   selector: 'app-grid',
