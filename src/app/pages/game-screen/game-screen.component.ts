@@ -3,16 +3,17 @@ import {GridComponent} from "../../components/grid/grid.component";
 import {ScoreboardComponent} from "../../components/scoreboard/scoreboard.component";
 import {Cell} from "../../types/Cell";
 import {getEmptyGrid} from "../../../assets/assets";
-import {MatchInfo} from "../../types/MatchInfo";
 import {Player} from "../../types/Player";
 import {NgIf} from "@angular/common";
 import {SessionService} from "../../services/SessionService";
 import {Router} from "@angular/router";
 import {GameService} from "../../services/GameService";
-import {GameDTO} from "../../types/GameDTO";
+import {GameDTO} from "../../types/dto/GameDTO";
 import {GameStatus} from "../../enums/GameStatus";
 import {Subject} from "rxjs";
 import {MoveRequest} from "../../types/dto/MoveRequest";
+import {GameEvent} from "../../enums/GameEvent";
+import {ScoreDTO} from "../../types/dto/ScoreDTO";
 
 @Component({
   selector: 'app-game-screen',
@@ -26,15 +27,12 @@ import {MoveRequest} from "../../types/dto/MoveRequest";
   styleUrl: './game-screen.component.css'
 })
 export class GameScreenComponent {
-  xScore: number = 0
-  oScore: number = 0
-  draws: number = 0
-  moves: number = 0
+  score!: ScoreDTO
   player!: Player
-  thisPlayerIsConnectedWithWS: boolean = false
-  private onConnectWS: Subject<void> = new Subject()
   gameStatus!: GameStatus
   grid!: Cell[][]
+  thisPlayerIsConnectedWithWS: boolean = false
+  private onConnectWS: Subject<void> = new Subject()
   protected readonly GameStatus = GameStatus;
 
   constructor (
@@ -62,7 +60,10 @@ export class GameScreenComponent {
   }
 
   updateStatusOnEvent (): void {
-    this.gameService.listenToEvent(this.onConnectWS).subscribe(() => {
+    this.gameService.listenToEvent(this.onConnectWS).subscribe((event) => {
+        if (event.type == GameEvent.MATCH_ENDED) {
+          this.handleEnfOfMath(event.winner)
+        }
         this.getStatus()
       }
     )
@@ -73,6 +74,7 @@ export class GameScreenComponent {
       next: (game: GameDTO) => {
         this.gameStatus = game.status
         this.grid = game.grid
+        this.score = game.score
       },
       error: (error: any) => {
         alert("Não foi possível obter o status da partida!")
@@ -123,34 +125,14 @@ export class GameScreenComponent {
     })
   }
 
-  score(matchInfo: MatchInfo): void {
-    if(matchInfo.finished) {
-      switch (matchInfo.winner) {
-        case "X":
-          this.xScore++
-          break
-        case "O":
-          this.oScore++
-          break
-        default:
-          this.draws++
+  handleEnfOfMath(winner: Cell): void {
+    setTimeout(() => {
+      if (winner != "EMPTY") {
+        alert(`Player ${winner} wins!`)
       }
-      this.finishMatch(matchInfo.winner)
-    }
-  }
-
-  finishMatch(winner: string): void {
-    const delay = 100
-    this.gameStatus = GameStatus.WAITING_START
-    if (winner) {
-      setTimeout(()=> {
-        alert(`Jogador: "${winner}" venceu!`)
-      }, delay)
-    }
-    else {
-      setTimeout(()=> {
-        alert(`Deu velha! Comece outro jogo!`)
-      }, delay)
-    }
+      else {
+        alert(`It's a draw game!`)
+      }
+    }, 100)
   }
 }

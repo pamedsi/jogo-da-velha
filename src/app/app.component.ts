@@ -3,7 +3,6 @@ import {RouterOutlet} from '@angular/router';
 import {NgForOf} from "@angular/common";
 import {ScoreboardComponent} from "./components/scoreboard/scoreboard.component";
 import {GridComponent} from "./components/grid/grid.component";
-import {WebSocketService} from "./services/WebSocketService";
 
 @Component({
   selector: 'app-root',
@@ -13,10 +12,5 @@ import {WebSocketService} from "./services/WebSocketService";
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-
-  constructor(private webSocketService: WebSocketService) {}
-
-  ngOnInit() {
-    // this.webSocketService.connect()
-  }
+  title = "tic-tac-toe"
 }

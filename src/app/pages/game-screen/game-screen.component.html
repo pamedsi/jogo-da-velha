@@ -6,18 +6,13 @@
 
   <main class="container">
     <app-scoreboard
-      [xScore]="xScore"
-      [oScore]="oScore"
-      [draws]="draws"
+      [score]="score"
     ></app-scoreboard>
 
     <app-grid
-      [possibleToFinish]="moves >= 4"
-      [thereAreMovesLeft]="moves < 8"
       [gameStatus]="gameStatus"
       [grid]="grid"
       [player]="player"
-      (matchFinished)="score($event)"
       (moveMade)="makeAMove($event)"
     ></app-grid>
 

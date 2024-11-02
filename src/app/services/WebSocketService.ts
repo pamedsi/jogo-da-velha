@@ -11,7 +11,7 @@ import {GameEventDTO} from "../types/dto/GameEventDTO";
 export class WebSocketService {
   private readonly url = 'server/websocket'
   stompClient!: Client
-  onMessageReceived: Subject<GameEventDTO> = new Subject()
+  private _onMessageReceived: Subject<GameEventDTO> = new Subject()
 
   connect(onConnectWS: Subject<void>) {
     const sessionID = localStorage.getItem('id')
@@ -22,12 +22,16 @@ export class WebSocketService {
       () => {
         onConnectWS.next()
         this.stompClient.subscribe('/topic/game', (gameEvent: any) => {
-          this.onMessageReceived.next(JSON.parse(gameEvent.body) as GameEventDTO)
+          this._onMessageReceived.next(JSON.parse(gameEvent.body) as GameEventDTO)
         })
       },
       (error) => {
         console.error("Failed to connect!", error)
       }
     )
+  }
+
+  get onMessageReceived (): Subject<GameEventDTO> {
+    return this._onMessageReceived
   }
 }
