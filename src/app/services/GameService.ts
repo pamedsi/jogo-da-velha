@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
 import {WebSocketService} from "./WebSocketService";
-import {GameDTO} from "../types/GameDTO";
+import {GameDTO} from "../types/dto/GameDTO";
 import {GameEventDTO} from "../types/dto/GameEventDTO";
 import {MoveRequest} from "../types/dto/MoveRequest";
 
