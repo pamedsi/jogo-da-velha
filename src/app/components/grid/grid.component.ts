@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {MatchInfo} from "../../types/MatchInfo";
 import {NgForOf} from "@angular/common";
 import {MoveRequest} from "../../types/dto/MoveRequest";
 import {Cell} from "../../types/Cell";
@@ -17,11 +16,8 @@ import {Player} from "../../types/Player";
 })
 export class GridComponent {
   @Input() grid!: Cell[][]
-  @Input() possibleToFinish!: boolean;
   @Input() gameStatus!: GameStatus
   @Input() player!: Player
-  @Input() thereAreMovesLeft!: boolean;
-  @Output() matchFinished = new EventEmitter<MatchInfo>();
   @Output() moveMade = new EventEmitter<MoveRequest>()
 
   play(row: number, column: number): void {
