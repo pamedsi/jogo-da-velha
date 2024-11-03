@@ -61,9 +61,13 @@ export class GameScreenComponent {
 
   updateStatusOnEvent (): void {
     this.gameService.listenToEvent(this.onConnectWS).subscribe((event) => {
-        if (event.type == GameEvent.MATCH_ENDED) {
-          this.handleEnfOfMath(event.winner)
+        if (event.type == GameEvent.SESSIONS_RESET) {
+          this.endSession()
+          return
         }
+        if (event.type == GameEvent.MATCH_ENDED) {
+            this.showWinner(event.winner)
+          }
         this.getStatus()
       }
     )
@@ -125,7 +129,7 @@ export class GameScreenComponent {
     })
   }
 
-  handleEnfOfMath(winner: Cell): void {
+  showWinner(winner: Cell): void {
     setTimeout(() => {
       if (winner != "EMPTY") {
         alert(`Player ${winner} wins!`)
@@ -134,5 +138,20 @@ export class GameScreenComponent {
         alert(`It's a draw game!`)
       }
     }, 100)
+  }
+
+  resetSessions() {
+    this.sessionService.resetSessions().subscribe(({
+      next: () => {},
+      error: error => {
+          alert("Couldn't restart sessions!")
+          console.error(error)
+      }
+    }))
+  }
+
+  endSession() {
+    localStorage.removeItem('id')
+    this.router.navigate([''])
   }
 }

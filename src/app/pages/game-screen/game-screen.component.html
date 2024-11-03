@@ -1,5 +1,8 @@
 <body>
 <!--  <span *ngIf="!player" class="spinner"></span>-->
+  <div class="reset-button-container">
+  <button (click)="resetSessions()">Reset sessions</button>
+  </div>
   <header>
     <h1>You are: <span *ngIf="player">{{player}}</span></h1>
   </header>
