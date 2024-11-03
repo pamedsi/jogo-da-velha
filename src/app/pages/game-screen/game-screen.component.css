@@ -89,6 +89,12 @@ h1 {
   margin-bottom: 1rem;
 }
 
+.reset-button-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
 /*.spinner {*/
 /*  width: 30px;*/
 /*  height: 30px;*/

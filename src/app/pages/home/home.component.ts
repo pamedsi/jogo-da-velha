@@ -35,7 +35,19 @@ export class HomeComponent {
     })
   }
 
-  joinAsGuest() {
+  resetGame() {
+    this.sessionService.resetSessions().subscribe({
+      next: () => {
+        alert("Sessions reset successfully!")
+      },
+      error:(error: any) => {
+        alert("Couldn't restart sessions!")
+        console.error(error)
+      }
+    })
+  }
 
+  joinAsGuest() {
+    // TODO
   }
 }
